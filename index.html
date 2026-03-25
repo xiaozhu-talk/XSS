@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConnectHub - 社交平台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ========== 顶部导航栏 ========== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-left">
+        <a href="index.html" class="logo">
+          <i class="fas fa-globe"></i>
+          <span>ConnectHub</span>
+        </a>
+        <div class="search-box" id="navSearchBox">
+          <i class="fas fa-search"></i>
+          <form id="searchForm" method="GET" action="search.html">
+            <input type="text" id="navSearchInput" name="search" placeholder="搜索用户、话题或内容..." autocomplete="off">
+          </form>
+        </div>
+      </div>
+      <div class="nav-center">
+        <a href="#" class="nav-icon active" title="首页"><i class="fas fa-house"></i></a>
+        <a href="#" class="nav-icon" title="视频"><i class="fas fa-tv"></i></a>
+        <a href="#" class="nav-icon" title="商城"><i class="fas fa-store"></i></a>
+        <a href="#" class="nav-icon" title="群组"><i class="fas fa-users"></i></a>
+        <a href="#" class="nav-icon" title="游戏"><i class="fas fa-gamepad"></i></a>
+      </div>
+      <div class="nav-right">
+        <button class="icon-btn" title="菜单"><i class="fas fa-grip"></i></button>
+        <button class="icon-btn has-badge" title="消息"><i class="fas fa-comment-dots"></i><span
+            class="badge">5</span></button>
+        <button class="icon-btn has-badge" title="通知"><i class="fas fa-bell"></i><span class="badge">12</span></button>
+        <div class="avatar-btn">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="头像">
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== 主体内容 ========== -->
+  <main class="main-layout">
+
+    <!-- ===== 左侧边栏 ===== -->
+    <aside class="sidebar sidebar-left">
+      <div class="sidebar-profile">
+        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="头像">
+        <span>Samy</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#"><i class="fas fa-user-group"></i>好友<span class="count">328</span></a>
+        <a href="#"><i class="fas fa-clock-rotate-left"></i>回忆</a>
+        <a href="#"><i class="fas fa-bookmark"></i>收藏</a>
+        <a href="#"><i class="fas fa-users"></i>群组</a>
+        <a href="#"><i class="fas fa-tv"></i>视频</a>
+        <a href="#"><i class="fas fa-store"></i>商城</a>
+        <a href="#"><i class="fas fa-calendar-days"></i>活动</a>
+        <a href="#"><i class="fas fa-newspaper"></i>资讯</a>
+        <a href="#"><i class="fas fa-heart"></i>公益</a>
+        <a href="#"><i class="fas fa-gamepad"></i>游戏中心</a>
+      </nav>
+      <div class="sidebar-section">
+        <h4>快捷入口</h4>
+        <a href="#"><i class="fas fa-code"></i>前端开发者社区</a>
+        <a href="#"><i class="fas fa-camera"></i>城市摄影爱好者</a>
+        <a href="#"><i class="fas fa-music"></i>独立音乐分享</a>
+      </div>
+      <div class="sidebar-footer">
+        <span>隐私 · 条款 · 广告 · Cookie · 更多 · ConnectHub © 2026</span>
+      </div>
+    </aside>
+
+    <!-- ===== 中间主内容 ===== -->
+    <section class="feed">
+
+      <!-- 故事条 -->
+      <div class="stories-bar">
+        <div class="story create-story">
+          <div class="story-img">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="">
+            <div class="create-icon"><i class="fas fa-plus"></i></div>
+          </div>
+          <span>创建故事</span>
+        </div>
+        <div class="story">
+          <div class="story-img"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=lily" alt=""></div>
+          <span>Lily</span>
+        </div>
+        <div class="story">
+          <div class="story-img"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=jack" alt=""></div>
+          <span>Jack</span>
+        </div>
+        <div class="story">
+          <div class="story-img"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=emma" alt=""></div>
+          <span>Emma</span>
+        </div>
+        <div class="story">
+          <div class="story-img"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=mike" alt=""></div>
+          <span>Mike</span>
+        </div>
+        <div class="story">
+          <div class="story-img"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=sara" alt=""></div>
+          <span>Sara</span>
+        </div>
+      </div>
+
+      <!-- 发帖区 -->
+      <div class="create-post card">
+        <div class="create-post-top">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="" class="avatar-sm">
+          <input type="text" placeholder="小明，分享一下你的新鲜事吧！" class="post-input">
+        </div>
+        <div class="divider"></div>
+        <div class="create-post-actions">
+          <button><i class="fas fa-video" style="color:#f02849;"></i>直播视频</button>
+          <button><i class="fas fa-image" style="color:#45bd62;"></i>照片/视频</button>
+          <button><i class="fas fa-face-smile" style="color:#f7b928;"></i>心情/活动</button>
+        </div>
+      </div>
+
+      <!-- 动态 1 -->
+      <article class="post card">
+        <div class="post-header">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=techguru" alt="" class="avatar-sm">
+          <div class="post-meta">
+            <a href="#" class="post-author">科技前沿 <i class="fas fa-circle-check verified"></i></a>
+            <span class="post-time">2 小时前 · <i class="fas fa-earth-americas"></i></span>
+          </div>
+          <button class="btn-more"><i class="fas fa-ellipsis"></i></button>
+        </div>
+        <div class="post-content">
+          <p>🚀 <strong>2026年最令人期待的5项技术突破！</strong></p>
+          <p>从量子计算到脑机接口，今年的科技圈将迎来翻天覆地的变化。你最期待哪项技术的突破？</p>
+          <p>#科技 #量子计算 #AI #未来</p>
+        </div>
+        <div class="post-image">
+          <img src="https://picsum.photos/seed/tech2026/800/420" alt="科技">
+        </div>
+        <div class="post-stats">
+          <div class="reactions">
+            <span class="reaction-icons">👍❤️🔥</span>
+            <span>李华、王芳等 2.4k 人</span>
+          </div>
+          <div class="comment-share-count">
+            <span>386 条评论</span>
+            <span>128 次分享</span>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="post-actions">
+          <button><i class="far fa-thumbs-up"></i> 赞</button>
+          <button><i class="far fa-comment"></i> 评论</button>
+          <button><i class="far fa-share-square"></i> 分享</button>
+        </div>
+      </article>
+
+      <!-- 动态 2 -->
+      <article class="post card">
+        <div class="post-header">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=lily" alt="" class="avatar-sm">
+          <div class="post-meta">
+            <a href="#" class="post-author">Lily Chen</a>
+            <span class="post-time">5 小时前 · <i class="fas fa-user-group"></i> 好友</span>
+          </div>
+          <button class="btn-more"><i class="fas fa-ellipsis"></i></button>
+        </div>
+        <div class="post-content">
+          <p>今天去了一家超赞的咖啡馆！☕ 拿铁拉花也太好看了吧～ 环境很安静适合工作，而且价格非常实惠。强烈推荐给大家！</p>
+          <p>📍 杭州 · 西湖区 · 文三路</p>
+        </div>
+        <div class="post-image post-image-grid">
+          <img src="https://picsum.photos/seed/cafe1/400/400" alt="咖啡1">
+          <img src="https://picsum.photos/seed/cafe2/400/400" alt="咖啡2">
+          <img src="https://picsum.photos/seed/cafe3/400/400" alt="咖啡3">
+          <img src="https://picsum.photos/seed/cafe4/400/400" alt="咖啡4">
+        </div>
+        <div class="post-stats">
+          <div class="reactions">
+            <span class="reaction-icons">❤️☕</span>
+            <span>你和其他 89 人</span>
+          </div>
+          <div class="comment-share-count">
+            <span>24 条评论</span>
+            <span>8 次分享</span>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="post-actions">
+          <button class="liked"><i class="fas fa-thumbs-up"></i> 赞</button>
+          <button><i class="far fa-comment"></i> 评论</button>
+          <button><i class="far fa-share-square"></i> 分享</button>
+        </div>
+        <!-- 评论区 -->
+        <div class="comments-section">
+          <div class="comment">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=jack" alt="" class="avatar-xs">
+            <div class="comment-bubble">
+              <a href="#" class="comment-author">Jack Wang</a>
+              <span>这家我也去过！他们的手冲也超棒 👏</span>
+            </div>
+          </div>
+          <div class="comment">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=emma" alt="" class="avatar-xs">
+            <div class="comment-bubble">
+              <a href="#" class="comment-author">Emma Li</a>
+              <span>下次一起去呀！🙋‍♀️</span>
+            </div>
+          </div>
+          <div class="write-comment">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="" class="avatar-xs">
+            <input type="text" placeholder="写评论...">
+          </div>
+        </div>
+      </article>
+
+      <!-- 动态 3: 投票 -->
+      <article class="post card">
+        <div class="post-header">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=pollmaster" alt="" class="avatar-sm">
+          <div class="post-meta">
+            <a href="#" class="post-author">每日一投</a>
+            <span class="post-time">8 小时前 · <i class="fas fa-earth-americas"></i></span>
+          </div>
+          <button class="btn-more"><i class="fas fa-ellipsis"></i></button>
+        </div>
+        <div class="post-content">
+          <p>📊 <strong>周末你更喜欢干什么？</strong></p>
+        </div>
+        <div class="poll-container">
+          <div class="poll-option" data-percent="42">
+            <div class="poll-bar" style="width: 42%;"></div>
+            <span class="poll-text">😴 在家躺平</span>
+            <span class="poll-percent">42%</span>
+          </div>
+          <div class="poll-option" data-percent="28">
+            <div class="poll-bar" style="width: 28%;"></div>
+            <span class="poll-text">🏔 户外运动</span>
+            <span class="poll-percent">28%</span>
+          </div>
+          <div class="poll-option" data-percent="18">
+            <div class="poll-bar" style="width: 18%;"></div>
+            <span class="poll-text">🎬 看电影</span>
+            <span class="poll-percent">18%</span>
+          </div>
+          <div class="poll-option" data-percent="12">
+            <div class="poll-bar" style="width: 12%;"></div>
+            <span class="poll-text">📚 读书学习</span>
+            <span class="poll-percent">12%</span>
+          </div>
+        </div>
+        <div class="post-stats">
+          <span class="poll-total">1,247 人已投票</span>
+        </div>
+        <div class="divider"></div>
+        <div class="post-actions">
+          <button><i class="far fa-thumbs-up"></i> 赞</button>
+          <button><i class="far fa-comment"></i> 评论</button>
+          <button><i class="far fa-share-square"></i> 分享</button>
+        </div>
+      </article>
+
+      <!-- 动态 4 -->
+      <article class="post card">
+        <div class="post-header">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=devops" alt="" class="avatar-sm">
+          <div class="post-meta">
+            <a href="#" class="post-author">DevOps老司机 <i class="fas fa-circle-check verified"></i></a>
+            <span class="post-time">昨天 · <i class="fas fa-earth-americas"></i></span>
+          </div>
+          <button class="btn-more"><i class="fas fa-ellipsis"></i></button>
+        </div>
+        <div class="post-content">
+          <p>分享一个今天处理线上事故的经验 🔧</p>
+          <p>凌晨3点收到告警，数据库 CPU 飙到 98%。排查发现是一个没加索引的慢查询被定时任务高频调用。</p>
+          <p>教训：<strong>永远不要相信 "这个表数据量不大"</strong>。数据量是会涨的！</p>
+          <div class="code-block">
+            <code>-- 加了这个索引后 CPU 直接从 98% 降到 3%
+CREATE INDEX idx_user_created_at ON users(created_at);</code>
+          </div>
+          <p>#运维 #MySQL #性能优化</p>
+        </div>
+        <div class="post-stats">
+          <div class="reactions">
+            <span class="reaction-icons">👍🔥💡</span>
+            <span>956 人</span>
+          </div>
+          <div class="comment-share-count">
+            <span>142 条评论</span>
+            <span>89 次分享</span>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="post-actions">
+          <button><i class="far fa-thumbs-up"></i> 赞</button>
+          <button><i class="far fa-comment"></i> 评论</button>
+          <button><i class="far fa-share-square"></i> 分享</button>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- ===== 右侧边栏 ===== -->
+    <aside class="sidebar sidebar-right">
+      <!-- 个人信息卡片 -->
+      <div class="card profile-card">
+        <div class="profile-banner"></div>
+        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="" class="profile-avatar">
+        <h3>Samy</h3>
+        <p class="profile-bio">全栈工程师 · 杭州 · 热爱开源</p>
+        <div class="profile-stats-row">
+          <div><strong>1,286</strong><span>关注者</span></div>
+          <div><strong>523</strong><span>关注中</span></div>
+          <div><strong>89</strong><span>帖子</span></div>
+        </div>
+      </div>
+
+      <!-- 热门话题 -->
+      <div class="card trending-card">
+        <h4><i class="fas fa-fire"></i> 热门话题</h4>
+        <div class="trending-item">
+          <span class="trending-rank">1</span>
+          <div>
+            <a href="#">#AI绘画大赛</a>
+            <span class="trending-count">12.8k 讨论</span>
+          </div>
+        </div>
+        <div class="trending-item">
+          <span class="trending-rank">2</span>
+          <div>
+            <a href="#">#春日出游攻略</a>
+            <span class="trending-count">9.4k 讨论</span>
+          </div>
+        </div>
+        <div class="trending-item">
+          <span class="trending-rank">3</span>
+          <div>
+            <a href="#">#开源之夏</a>
+            <span class="trending-count">7.2k 讨论</span>
+          </div>
+        </div>
+        <div class="trending-item">
+          <span class="trending-rank">4</span>
+          <div>
+            <a href="#">#远程办公心得</a>
+            <span class="trending-count">5.6k 讨论</span>
+          </div>
+        </div>
+        <div class="trending-item">
+          <span class="trending-rank">5</span>
+          <div>
+            <a href="#">#Rust学习之路</a>
+            <span class="trending-count">3.1k 讨论</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 推荐好友 -->
+      <div class="card suggest-card">
+        <h4><i class="fas fa-user-plus"></i> 推荐好友</h4>
+        <div class="suggest-item">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=alice" alt="">
+          <div>
+            <a href="#">Alice Zhang</a>
+            <span>12 个共同好友</span>
+          </div>
+          <button class="btn-follow">关注</button>
+        </div>
+        <div class="suggest-item">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=bob" alt="">
+          <div>
+            <a href="#">Bob Liu</a>
+            <span>8 个共同好友</span>
+          </div>
+          <button class="btn-follow">关注</button>
+        </div>
+        <div class="suggest-item">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=cindy" alt="">
+          <div>
+            <a href="#">Cindy Wu</a>
+            <span>5 个共同好友</span>
+          </div>
+          <button class="btn-follow">关注</button>
+        </div>
+      </div>
+
+      <!-- 在线好友 -->
+      <div class="card online-card">
+        <h4><i class="fas fa-circle" style="color:#31a24c;font-size:10px;"></i> 在线好友</h4>
+        <div class="online-list">
+          <div class="online-item"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=lily" alt=""><span>Lily
+              Chen</span><span class="online-dot"></span></div>
+          <div class="online-item"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=jack" alt=""><span>Jack
+              Wang</span><span class="online-dot"></span></div>
+          <div class="online-item"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=mike" alt=""><span>Mike
+              Zhao</span><span class="online-dot"></span></div>
+          <div class="online-item"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=sara" alt=""><span>Sara
+              Lin</span><span class="online-dot"></span></div>
+          <div class="online-item"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=tom" alt=""><span>Tom
+              Xu</span><span class="online-dot"></span></div>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- ========== 聊天气泡 ========== -->
+  <div class="chat-bubble" id="chatBubble">
+    <i class="fas fa-comment-dots"></i>
+    <span class="chat-badge">3</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

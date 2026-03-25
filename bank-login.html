@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>安全登录 - 黑石银行 BlackStone Bank</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #000000;
+      --black-light: #0a0a0a;
+      --gray-950: #0d0d0d;
+      --gray-900: #141414;
+      --gray-850: #1a1a1a;
+      --gray-800: #222222;
+      --gray-700: #333333;
+      --gray-600: #4a4a4a;
+      --gray-500: #666666;
+      --gray-400: #888888;
+      --gray-300: #aaaaaa;
+      --gray-200: #cccccc;
+      --gray-100: #e5e5e5;
+      --white: #ffffff;
+      --white-dim: #f5f5f5;
+      --gold: #c9a84c;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--black);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== 顶部导航 ===== */
+    .bank-nav {
+      height: 64px;
+      background: var(--black);
+      border-bottom: 1px solid var(--gray-800);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+
+    .bank-logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: var(--white);
+    }
+
+    .bank-logo .logo-icon {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--white);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing: -1px;
+    }
+
+    .bank-logo .logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .bank-logo .logo-sub {
+      font-size: 10px;
+      font-weight: 400;
+      color: var(--gray-400);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      display: block;
+      margin-top: -2px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-links a {
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-help {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--gray-400);
+      font-size: 13px;
+    }
+
+    .nav-help i { font-size: 14px; }
+
+    /* ===== 主体 ===== */
+    .login-main {
+      flex: 1;
+      display: flex;
+      margin-top: 64px;
+    }
+
+    /* 左侧品牌区 */
+    .brand-side {
+      flex: 1;
+      background: var(--gray-950);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-side::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -30%;
+      width: 800px;
+      height: 800px;
+      border: 1px solid var(--gray-800);
+      border-radius: 50%;
+      opacity: 0.4;
+    }
+
+    .brand-side::after {
+      content: '';
+      position: absolute;
+      bottom: -40%;
+      left: -20%;
+      width: 600px;
+      height: 600px;
+      border: 1px solid var(--gray-800);
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+
+    .brand-content {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+    }
+
+    .brand-content .tagline {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin-bottom: 24px;
+    }
+
+    .brand-content h2 {
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 24px;
+    }
+
+    .brand-content h2 span {
+      color: var(--gray-500);
+    }
+
+    .brand-content p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--gray-400);
+      max-width: 400px;
+    }
+
+    .brand-features {
+      display: flex;
+      gap: 40px;
+      margin-top: 48px;
+      padding-top: 48px;
+      border-top: 1px solid var(--gray-800);
+    }
+
+    .brand-feature {
+      text-align: center;
+    }
+
+    .brand-feature .number {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -1px;
+    }
+
+    .brand-feature .label {
+      font-size: 11px;
+      color: var(--gray-500);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* 右侧登录区 */
+    .login-side {
+      width: 520px;
+      flex-shrink: 0;
+      background: var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+      border-left: 1px solid var(--gray-800);
+    }
+
+    .login-form-container {
+      width: 100%;
+      max-width: 380px;
+      animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .login-form-container h3 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .login-form-container .subtitle {
+      font-size: 14px;
+      color: var(--gray-500);
+      margin-bottom: 36px;
+    }
+
+    /* 表单 */
+    .field {
+      margin-bottom: 24px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      margin-bottom: 10px;
+    }
+
+    .field-input {
+      position: relative;
+    }
+
+    .field-input input {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--gray-900);
+      border: 1px solid var(--gray-700);
+      border-radius: 8px;
+      color: var(--white);
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .field-input input:focus {
+      border-color: var(--white);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.06);
+    }
+
+    .field-input input::placeholder { color: var(--gray-600); }
+
+    .field-input .toggle-vis {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--gray-500);
+      cursor: pointer;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .field-input .toggle-vis:hover { color: var(--white); }
+
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .remember-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--gray-400);
+      cursor: pointer;
+    }
+
+    .remember-label input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--white);
+    }
+
+    .forgot {
+      font-size: 13px;
+      color: var(--gray-400);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .forgot:hover { color: var(--white); text-decoration: underline; }
+
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: var(--white);
+      border: none;
+      border-radius: 8px;
+      color: var(--black);
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-submit:hover {
+      background: var(--gray-100);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(255,255,255,0.08);
+    }
+
+    .btn-submit:active { transform: translateY(0); }
+
+    .btn-submit.loading { pointer-events: none; opacity: 0.7; }
+    .btn-submit.loading .t { display: none; }
+    .btn-submit.loading .spin { display: block; }
+
+    .btn-submit .spin {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--gray-300);
+      border-top-color: var(--black);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .alert-box {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      align-items: center;
+      gap: 8px;
+      animation: fadeShake 0.4s ease;
+    }
+
+    .alert-box.error {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gray-700);
+      color: #ff6b6b;
+    }
+
+    .alert-box.success {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--gray-700);
+      color: var(--white);
+    }
+
+    .alert-box.show { display: flex; }
+
+    @keyframes fadeShake {
+      0%,100% { transform: translateX(0); }
+      20% { transform: translateX(-4px); }
+      40% { transform: translateX(4px); }
+      60% { transform: translateX(-2px); }
+      80% { transform: translateX(2px); }
+    }
+
+    .security-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--gray-800);
+      font-size: 12px;
+      color: var(--gray-600);
+    }
+
+    .security-note i {
+      font-size: 14px;
+      color: var(--gray-500);
+    }
+
+    .demo-box {
+      margin-top: 24px;
+      padding: 16px;
+      background: var(--gray-900);
+      border: 1px solid var(--gray-800);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--gray-500);
+      line-height: 1.8;
+    }
+
+    .demo-box strong { color: var(--gray-300); }
+
+    /* 底部 */
+    .bank-footer {
+      padding: 20px 48px;
+      border-top: 1px solid var(--gray-800);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--gray-600);
+      letter-spacing: 0.5px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      color: var(--gray-600);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--gray-300); }
+
+    /* 响应式 */
+    @media (max-width: 960px) {
+      .brand-side { display: none; }
+      .login-side { width: 100%; border-left: none; }
+    }
+
+    @media (max-width: 480px) {
+      .bank-nav { padding: 0 20px; }
+      .bank-nav .nav-links { display: none; }
+      .login-side { padding: 32px 20px; }
+      .bank-footer { padding: 16px 20px; flex-direction: column; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 导航 -->
+  <nav class="bank-nav">
+    <a href="bank-login.html" class="bank-logo">
+      <div class="logo-icon">BS</div>
+      <div>
+        <div class="logo-text">BlackStone</div>
+        <div class="logo-sub">Private Bank</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#">个人银行</a>
+      <a href="#">企业银行</a>
+      <a href="#">财富管理</a>
+      <a href="#">关于我们</a>
+    </div>
+    <div class="nav-help">
+      <i class="fas fa-headset"></i>
+      <span>400-800-9999</span>
+    </div>
+  </nav>
+
+  <!-- 主体 -->
+  <main class="login-main">
+    <!-- 左侧品牌 -->
+    <div class="brand-side">
+      <div class="brand-content">
+        <div class="tagline">Since 1923 · 值得信赖的百年银行</div>
+        <h2>
+          守护您的财富，<br>
+          <span>成就非凡人生。</span>
+        </h2>
+        <p>BlackStone Bank 致力于为高净值客户提供全球领先的私人银行服务。安全、专业、值得信赖。</p>
+        <div class="brand-features">
+          <div class="brand-feature">
+            <div class="number">¥2.8T</div>
+            <div class="label">资产管理规模</div>
+          </div>
+          <div class="brand-feature">
+            <div class="number">180+</div>
+            <div class="label">全球网点</div>
+          </div>
+          <div class="brand-feature">
+            <div class="number">99.99%</div>
+            <div class="label">系统可用性</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧登录 -->
+    <div class="login-side">
+      <div class="login-form-container">
+        <h3>安全登录</h3>
+        <p class="subtitle">登录您的 BlackStone Bank 网上银行账户</p>
+
+        <div class="alert-box error" id="alertError">
+          <i class="fas fa-circle-xmark"></i>
+          <span id="alertErrorText">用户名或密码错误</span>
+        </div>
+        <div class="alert-box success" id="alertSuccess">
+          <i class="fas fa-circle-check"></i>
+          <span id="alertSuccessText">登录成功，正在跳转...</span>
+        </div>
+
+        <form id="bankLoginForm" autocomplete="off">
+          <div class="field">
+            <label>账户名 / 卡号</label>
+            <div class="field-input">
+              <input type="text" id="bankUser" name="username" placeholder="请输入账户名或银行卡号" required>
+            </div>
+          </div>
+          <div class="field">
+            <label>登录密码</label>
+            <div class="field-input">
+              <input type="password" id="bankPwd" name="password" placeholder="请输入登录密码" required>
+              <button type="button" class="toggle-vis" id="toggleBankPwd">
+                <i class="far fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label class="remember-label"><input type="checkbox"> 记住账户名</label>
+            <a href="#" class="forgot">忘记密码？</a>
+          </div>
+          <button type="submit" class="btn-submit" id="btnBankLogin">
+            <span class="t">登 录</span>
+            <div class="spin"></div>
+          </button>
+        </form>
+
+        <div class="security-note">
+          <i class="fas fa-shield-halved"></i>
+          <span>本页面使用 256 位 SSL 加密保护，请确认地址栏显示安全锁。</span>
+        </div>
+
+        <div class="demo-box">
+          <strong>🔑 演示账号：</strong><br>
+          账户名：<strong>admin</strong> &nbsp; 密码：<strong>123456</strong><br>
+          登录后服务器通过 <strong>Set-Cookie</strong> 响应头下发 Cookie。
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 底部 -->
+  <footer class="bank-footer">
+    <span>© 2026 BlackStone Bank. All rights reserved.</span>
+    <div class="footer-links">
+      <a href="#">隐私政策</a>
+      <a href="#">安全中心</a>
+      <a href="#">用户协议</a>
+      <a href="#">无障碍</a>
+    </div>
+  </footer>
+
+  <script>
+    // 密码可见
+    document.getElementById('toggleBankPwd').addEventListener('click', function () {
+      const inp = document.getElementById('bankPwd');
+      const ico = this.querySelector('i');
+      if (inp.type === 'password') { inp.type = 'text'; ico.classList.replace('fa-eye', 'fa-eye-slash'); }
+      else { inp.type = 'password'; ico.classList.replace('fa-eye-slash', 'fa-eye'); }
+    });
+
+    // 提交
+    document.getElementById('bankLoginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnBankLogin');
+      const errBox = document.getElementById('alertError');
+      const sucBox = document.getElementById('alertSuccess');
+      errBox.classList.remove('show');
+      sucBox.classList.remove('show');
+      btn.classList.add('loading');
+
+      const username = document.getElementById('bankUser').value.trim();
+      const password = document.getElementById('bankPwd').value;
+
+      try {
+        const res = await fetch('/api/bank/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+          credentials: 'same-origin'
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          document.getElementById('alertSuccessText').textContent =
+            `登录成功！欢迎回来，${data.user.name}。正在跳转...`;
+          sucBox.classList.add('show');
+          setTimeout(() => { window.location.href = '/bank-dashboard.html'; }, 1500);
+        } else {
+          document.getElementById('alertErrorText').textContent = data.message || '登录失败';
+          errBox.classList.add('show');
+        }
+      } catch (err) {
+        document.getElementById('alertErrorText').textContent = '网络错误，请确认服务器已启动 (node server.js)';
+        errBox.classList.add('show');
+      } finally {
+        btn.classList.remove('loading');
+      }
+    });
+  </script>
+</body>
+</html>

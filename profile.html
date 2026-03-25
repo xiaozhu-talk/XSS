@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人中心 - ConnectHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ===== 个人中心页面专属样式 ===== */
+    .profile-page {
+      max-width: 940px;
+      margin: calc(var(--nav-height) + 16px) auto 40px;
+      padding: 0 16px;
+    }
+
+    /* 封面区域 */
+    .profile-cover {
+      position: relative;
+      height: 320px;
+      border-radius: 0 0 16px 16px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1e1b4b, #4c1d95, #6d28d9, #7c3aed);
+      background-size: 300% 300%;
+      animation: gradientShift 8s ease infinite;
+    }
+
+    @keyframes gradientShift {
+
+      0%,
+      100% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    .profile-cover::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.5));
+    }
+
+    .cover-pattern {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 60% 80%, rgba(236, 72, 153, 0.2) 0%, transparent 40%);
+    }
+
+    /* 头像区域 */
+    .profile-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+      margin-top: -80px;
+      padding: 0 32px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .profile-avatar-lg {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 5px solid var(--bg-primary);
+      object-fit: cover;
+      background: var(--bg-secondary);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      flex-shrink: 0;
+    }
+
+    .profile-header-info {
+      flex: 1;
+      padding-bottom: 16px;
+    }
+
+    .profile-header-info h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .profile-header-info .tagline {
+      color: var(--text-secondary);
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+
+    .profile-header-info .mutual {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+
+    .profile-header-info .mutual img {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: -8px;
+      border: 2px solid var(--bg-primary);
+    }
+
+    .profile-header-actions {
+      display: flex;
+      gap: 10px;
+      padding-bottom: 16px;
+    }
+
+    .btn-primary {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, var(--accent), #a855f7);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-secondary {
+      padding: 10px 20px;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-hover);
+      border-color: var(--accent);
+    }
+
+    /* 标签导航 */
+    .profile-tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+      margin: 20px 0;
+      padding: 0 16px;
+    }
+
+    .profile-tabs a {
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      border-bottom: 3px solid transparent;
+      transition: var(--transition);
+    }
+
+    .profile-tabs a:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+      border-radius: 8px 8px 0 0;
+    }
+
+    .profile-tabs a.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    /* 内容区域 */
+    .profile-content {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+    }
+
+    /* 左栏 - 信息卡片 */
+    .info-card {
+      background: var(--bg-secondary);
+      border-radius: var(--card-radius);
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .info-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .info-card .bio-section {
+      margin-bottom: 20px;
+    }
+
+    .info-card .bio-label {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    /* ⚠️ 存储型 XSS 漏洞：个人简介使用 innerHTML 渲染，不做任何转义 */
+    .info-card .bio-content {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      padding: 12px 16px;
+      background: var(--bg-tertiary);
+      border-radius: 10px;
+      min-height: 60px;
+      word-break: break-word;
+    }
+
+    .bio-edit-area {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 15px;
+      font-family: inherit;
+      line-height: 1.7;
+      resize: vertical;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .bio-edit-area:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-light);
+    }
+
+    .bio-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      justify-content: flex-end;
+    }
+
+    .btn-save {
+      padding: 8px 20px;
+      background: linear-gradient(135deg, var(--accent), #a855f7);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-save:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-cancel {
+      padding: 8px 20px;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-cancel:hover {
+      background: var(--bg-hover);
+    }
+
+    .btn-edit-bio {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-edit-bio:hover {
+      background: var(--bg-hover);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .info-item i {
+      width: 20px;
+      text-align: center;
+      color: var(--text-tertiary);
+      font-size: 15px;
+    }
+
+    .info-item a {
+      color: var(--accent);
+    }
+
+    .info-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 12px 0;
+    }
+
+    /* 照片墙 */
+    .photos-card {
+      background: var(--bg-secondary);
+      border-radius: var(--card-radius);
+      padding: 20px;
+      border: 1px solid var(--border);
+      margin-top: 16px;
+    }
+
+    .photos-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .photos-card h3 a {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .photos-grid img {
+      aspect-ratio: 1;
+      object-fit: cover;
+      width: 100%;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .photos-grid img:hover {
+      opacity: 0.85;
+      transform: scale(1.02);
+    }
+
+    /* 好友列表卡片 */
+    .friends-card {
+      background: var(--bg-secondary);
+      border-radius: var(--card-radius);
+      padding: 20px;
+      border: 1px solid var(--border);
+      margin-top: 16px;
+    }
+
+    .friends-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .friends-card .friends-count {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      margin-bottom: 12px;
+    }
+
+    .friends-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .friend-item {
+      text-align: center;
+      cursor: pointer;
+      border-radius: 10px;
+      padding: 10px 6px;
+      transition: var(--transition);
+    }
+
+    .friend-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .friend-item img {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 10px;
+      object-fit: cover;
+      margin-bottom: 6px;
+    }
+
+    .friend-item span {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* 右栏 - 动态 */
+    .profile-posts {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* 统计卡片 */
+    .stats-banner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .stat-card {
+      background: var(--bg-secondary);
+      border-radius: var(--card-radius);
+      padding: 20px;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
+    }
+
+    .stat-card .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-card .stat-label {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-top: 4px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* 保存成功提示 */
+    .toast {
+      position: fixed;
+      top: 80px;
+      right: 24px;
+      padding: 14px 24px;
+      background: linear-gradient(135deg, #059669, #10b981);
+      color: #fff;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(5, 150, 105, 0.3);
+      transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 9999;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    /* 响应式 */
+    @media (max-width: 900px) {
+      .profile-content {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 0 16px;
+      }
+
+      .profile-header-actions {
+        justify-content: center;
+      }
+
+      .stats-banner {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ========== 顶部导航栏 ========== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-left">
+        <a href="index.html" class="logo">
+          <i class="fas fa-globe"></i>
+          <span>ConnectHub</span>
+        </a>
+        <div class="search-box" id="navSearchBox">
+          <i class="fas fa-search"></i>
+          <form id="searchForm" method="GET" action="search.html">
+            <input type="text" id="navSearchInput" name="search" placeholder="搜索用户、话题或内容..." autocomplete="off">
+          </form>
+        </div>
+      </div>
+      <div class="nav-center">
+        <a href="index.html" class="nav-icon" title="首页"><i class="fas fa-house"></i></a>
+        <a href="#" class="nav-icon" title="视频"><i class="fas fa-tv"></i></a>
+        <a href="#" class="nav-icon" title="商城"><i class="fas fa-store"></i></a>
+        <a href="#" class="nav-icon" title="群组"><i class="fas fa-users"></i></a>
+        <a href="#" class="nav-icon" title="游戏"><i class="fas fa-gamepad"></i></a>
+      </div>
+      <div class="nav-right">
+        <button class="icon-btn" title="菜单"><i class="fas fa-grip"></i></button>
+        <button class="icon-btn has-badge" title="消息"><i class="fas fa-comment-dots"></i><span
+            class="badge">5</span></button>
+        <button class="icon-btn has-badge" title="通知"><i class="fas fa-bell"></i><span class="badge">12</span></button>
+        <a href="profile.html" class="avatar-btn">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="头像">
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== 个人中心主体 ========== -->
+  <div class="profile-page">
+
+    <!-- 封面图 -->
+    <div class="profile-cover">
+      <div class="cover-pattern"></div>
+    </div>
+
+    <!-- 头像 & 基本信息 -->
+    <div class="profile-header">
+      <!-- <img shttpsrc="://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="头像" class="profile-avatar-lg"> -->
+      <img src="./bubu.png" alt="头像" class="profile-avatar-lg">
+      <div class="profile-header-info">
+        <h1>Samy</h1>
+        <div class="tagline">全栈工程师 · ConnectHub 早期用户</div>
+        <div class="mutual">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=lily" alt="">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=jack" alt="">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=emma" alt="">
+          <span style="margin-left: 14px;">Lily Chen、Jack Wang 等 23 位共同好友</span>
+        </div>
+      </div>
+      <div class="profile-header-actions">
+        <button class="btn-primary"><i class="fas fa-plus"></i> 加入故事</button>
+        <button class="btn-secondary"><i class="fas fa-pen"></i> 编辑资料</button>
+        <button class="btn-secondary"><i class="fas fa-ellipsis"></i></button>
+      </div>
+    </div>
+
+    <!-- 标签导航 -->
+    <div class="profile-tabs">
+      <a href="#" class="active">帖子</a>
+      <a href="#">关于</a>
+      <a href="#">好友 <span style="color:var(--text-tertiary)">328</span></a>
+      <a href="#">照片</a>
+      <a href="#">视频</a>
+      <a href="#">收藏</a>
+      <a href="#">更多</a>
+    </div>
+
+    <!-- 内容区域 -->
+    <div class="profile-content">
+
+      <!-- 左栏：个人信息 -->
+      <div class="profile-left">
+
+        <!-- 个人简介卡片 -->
+        <div class="info-card">
+          <h3>个人简介</h3>
+
+          <!-- ⚠️ 简介显示区域（存储型 XSS 漏洞点） -->
+          <div class="bio-section">
+            <div class="bio-label">个人简介</div>
+            <!-- ⚠️ 漏洞！这里使用 innerHTML 直接渲染用户输入，不做转义 -->
+            <div class="bio-content" id="bioDisplay"></div>
+            <button class="btn-edit-bio" id="btnEditBio" onclick="showBioEditor()">
+              <i class="fas fa-pen"></i> 编辑个人简介
+            </button>
+          </div>
+
+          <!-- 编辑表单（默认隐藏） -->
+          <div id="bioEditor" style="display:none;">
+            <textarea class="bio-edit-area" id="bioInput" placeholder="介绍一下你自己..."></textarea>
+            <div class="bio-actions">
+              <button class="btn-cancel" onclick="cancelBioEdit()">取消</button>
+              <button class="btn-save" onclick="saveBio()"><i class="fas fa-check"></i> 保存</button>
+            </div>
+          </div>
+
+          <div class="info-divider"></div>
+
+          <!-- 详细信息 -->
+          <div class="info-item">
+            <i class="fas fa-briefcase"></i>
+            <span>全栈开发工程师 @ <a href="#">杭州科技有限公司</a></span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-graduation-cap"></i>
+            <span>浙江大学 · 计算机科学与技术</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-location-dot"></i>
+            <span>杭州, 浙江</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-heart"></i>
+            <span>单身</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-clock"></i>
+            <span>2023 年 6 月加入 ConnectHub</span>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-link"></i>
+            <a href="#">github.com/paidaxing</a>
+          </div>
+          <div class="info-item">
+            <i class="fas fa-rss"></i>
+            <span>有 <strong>1,286</strong> 位关注者</span>
+          </div>
+        </div>
+
+        <!-- 照片 -->
+        <div class="photos-card">
+          <h3>照片 <a href="#">查看全部</a></h3>
+          <div class="photos-grid">
+            <img src="https://picsum.photos/seed/p1/200/200" alt="">
+            <img src="https://picsum.photos/seed/p2/200/200" alt="">
+            <img src="https://picsum.photos/seed/p3/200/200" alt="">
+            <img src="https://picsum.photos/seed/p4/200/200" alt="">
+            <img src="https://picsum.photos/seed/p5/200/200" alt="">
+            <img src="https://picsum.photos/seed/p6/200/200" alt="">
+            <img src="https://picsum.photos/seed/p7/200/200" alt="">
+            <img src="https://picsum.photos/seed/p8/200/200" alt="">
+            <img src="https://picsum.photos/seed/p9/200/200" alt="">
+          </div>
+        </div>
+
+        <!-- 好友 -->
+        <div class="friends-card">
+          <h3>好友 <a href="#">查看全部</a></h3>
+          <div class="friends-count">328 位好友</div>
+          <div class="friends-grid">
+            <div class="friend-item">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=lily" alt="">
+              <span>Lily Chen</span>
+            </div>
+            <div class="friend-item">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=jack" alt="">
+              <span>Jack Wang</span>
+            </div>
+            <div class="friend-item">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=emma" alt="">
+              <span>Emma Li</span>
+            </div>
+            <div class="friend-item">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=mike" alt="">
+              <span>Mike Zhao</span>
+            </div>
+            <div class="friend-item">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=sara" alt="">
+              <span>Sara Lin</span>
+            </div>
+            <div class="friend-item">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=tom" alt="">
+              <span>Tom Xu</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 右栏：动态 -->
+      <div class="profile-posts">
+
+        <!-- 统计 -->
+        <div class="stats-banner">
+          <div class="stat-card">
+            <div class="stat-value">89</div>
+            <div class="stat-label">帖子</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">1,286</div>
+            <div class="stat-label">关注者</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">523</div>
+            <div class="stat-label">关注中</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">2.4k</div>
+            <div class="stat-label">获赞</div>
+          </div>
+        </div>
+
+        <!-- 发帖区 -->
+        <div class="create-post card">
+          <div class="create-post-top">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="" class="avatar-sm">
+            <input type="text" placeholder="Samy，分享一下你的新鲜事吧！" class="post-input">
+          </div>
+          <div class="divider"></div>
+          <div class="create-post-actions">
+            <button><i class="fas fa-video" style="color:#f02849;"></i>直播视频</button>
+            <button><i class="fas fa-image" style="color:#45bd62;"></i>照片/视频</button>
+            <button><i class="fas fa-face-smile" style="color:#f7b928;"></i>心情/活动</button>
+          </div>
+        </div>
+
+        <!-- 动态 1 -->
+        <article class="post card">
+          <div class="post-header">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="" class="avatar-sm">
+            <div class="post-meta">
+              <a href="#" class="post-author">Samy</a>
+              <span class="post-time">3 小时前 · <i class="fas fa-earth-americas"></i></span>
+            </div>
+            <button class="btn-more"><i class="fas fa-ellipsis"></i></button>
+          </div>
+          <div class="post-content">
+            <p>今天终于完成了新项目的架构设计！💪 用 Rust 重写了核心引擎，性能提升了 300%。</p>
+            <p>分享一下我的技术选型思路，希望对大家有帮助。</p>
+            <p>#Rust #系统架构 #性能优化</p>
+          </div>
+          <div class="post-image">
+            <img src="https://picsum.photos/seed/code2026/800/420" alt="代码">
+          </div>
+          <div class="post-stats">
+            <div class="reactions">
+              <span class="reaction-icons">🔥👍💡</span>
+              <span>Jack Wang 等 186 人</span>
+            </div>
+            <div class="comment-share-count">
+              <span>42 条评论</span>
+              <span>18 次分享</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="post-actions">
+            <button><i class="far fa-thumbs-up"></i> 赞</button>
+            <button><i class="far fa-comment"></i> 评论</button>
+            <button><i class="far fa-share-square"></i> 分享</button>
+          </div>
+        </article>
+
+        <!-- 动态 2 -->
+        <article class="post card">
+          <div class="post-header">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="" class="avatar-sm">
+            <div class="post-meta">
+              <a href="#" class="post-author">Samy</a>
+              <span class="post-time">昨天 · <i class="fas fa-user-group"></i> 好友</span>
+            </div>
+            <button class="btn-more"><i class="fas fa-ellipsis"></i></button>
+          </div>
+          <div class="post-content">
+            <p>周末去了灵隐寺，春天的杭州真的太美了 🌸</p>
+          </div>
+          <div class="post-image post-image-grid">
+            <img src="https://picsum.photos/seed/hz1/400/400" alt="杭州1">
+            <img src="https://picsum.photos/seed/hz2/400/400" alt="杭州2">
+            <img src="https://picsum.photos/seed/hz3/400/400" alt="杭州3">
+            <img src="https://picsum.photos/seed/hz4/400/400" alt="杭州4">
+          </div>
+          <div class="post-stats">
+            <div class="reactions">
+              <span class="reaction-icons">❤️🌸</span>
+              <span>Lily Chen 等 92 人</span>
+            </div>
+            <div class="comment-share-count">
+              <span>16 条评论</span>
+              <span>5 次分享</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="post-actions">
+            <button class="liked"><i class="fas fa-thumbs-up"></i> 赞</button>
+            <button><i class="far fa-comment"></i> 评论</button>
+            <button><i class="far fa-share-square"></i> 分享</button>
+          </div>
+        </article>
+
+        <!-- 动态 3 -->
+        <article class="post card">
+          <div class="post-header">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="" class="avatar-sm">
+            <div class="post-meta">
+              <a href="#" class="post-author">Samy</a>
+              <span class="post-time">3 天前 · <i class="fas fa-earth-americas"></i></span>
+            </div>
+            <button class="btn-more"><i class="fas fa-ellipsis"></i></button>
+          </div>
+          <div class="post-content">
+            <p>推荐一本好书 📖《Designing Data-Intensive Applications》</p>
+            <p>看完之后对分布式系统的理解提升了一个档次。强烈推荐给所有后端开发者！</p>
+            <div class="code-block">
+              <code>// 分布式一致性的核心挑战
+// 1. 网络分区 (Network Partition)
+// 2. 时钟同步 (Clock Synchronization)
+// 3. 状态复制 (State Replication)</code>
+            </div>
+            <p>#读书 #分布式系统 #后端开发</p>
+          </div>
+          <div class="post-stats">
+            <div class="reactions">
+              <span class="reaction-icons">👍📚💡</span>
+              <span>256 人</span>
+            </div>
+            <div class="comment-share-count">
+              <span>38 条评论</span>
+              <span>67 次分享</span>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="post-actions">
+            <button><i class="far fa-thumbs-up"></i> 赞</button>
+            <button><i class="far fa-comment"></i> 评论</button>
+            <button><i class="far fa-share-square"></i> 分享</button>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 保存成功提示 -->
+  <div class="toast" id="toast">
+    <i class="fas fa-circle-check"></i>
+    <span>个人简介已保存</span>
+  </div>
+
+  <script>
+    // =====================================================
+    // ⚠️ 存储型 XSS 漏洞演示
+    //
+    // 漏洞原理：
+    // 1. 用户在个人简介中输入恶意脚本，如 <img src=x onerror=alert('XSS')>
+    // 2. 前端通过 POST /api/profile/bio 将内容保存到服务器
+    // 3. 服务器不做任何过滤/转义，直接存储原始内容
+    // 4. 页面加载时通过 GET /api/profile/bio 获取内容
+    // 5. 前端使用 innerHTML 直接渲染，触发恶意脚本执行
+    // 6. 刷新页面后，从服务器重新获取，innerHTML 再次渲染，XSS 再次触发
+    //
+    // 这就是「存储型 XSS」：恶意脚本被持久化存储在服务器端
+    // =====================================================
+
+    // 页面加载时从服务器获取已保存的个人简介
+    document.addEventListener('DOMContentLoaded', loadBio);
+
+    function loadBio() {
+      fetch('/api/profile/bio')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.bio) {
+            // ⚠️ 漏洞！使用 innerHTML 直接渲染服务器返回的内容
+            // 不做任何 HTML 转义或过滤
+            document.getElementById('bioDisplay').innerHTML = data.bio;
+          } else {
+            document.getElementById('bioDisplay').innerHTML =
+              '<span style="color:var(--text-tertiary);font-style:italic;">还没有填写个人简介，点击下方按钮编辑～</span>';
+          }
+        })
+        .catch(() => {
+          document.getElementById('bioDisplay').innerHTML =
+            '<span style="color:var(--text-tertiary);font-style:italic;">还没有填写个人简介，点击下方按钮编辑～</span>';
+        });
+    }
+
+    // 显示编辑区域
+    function showBioEditor() {
+      document.getElementById('bioEditor').style.display = 'block';
+      document.getElementById('btnEditBio').style.display = 'none';
+
+      // 把当前显示的内容（原始 HTML）填入编辑框
+      const currentBio = document.getElementById('bioDisplay').innerHTML;
+      // 如果是占位文字，则清空
+      if (currentBio.includes('还没有填写')) {
+        document.getElementById('bioInput').value = '';
+      } else {
+        document.getElementById('bioInput').value = currentBio;
+      }
+
+      document.getElementById('bioInput').focus();
+    }
+
+    // 取消编辑
+    function cancelBioEdit() {
+      document.getElementById('bioEditor').style.display = 'none';
+      document.getElementById('btnEditBio').style.display = 'flex';
+    }
+
+    // 保存个人简介
+    function saveBio() {
+      const bioText = document.getElementById('bioInput').value;
+
+      // 发送到服务器保存（不做任何过滤）
+      fetch('/api/profile/bio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bio: bioText })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            // ⚠️ 漏洞！保存成功后，使用 innerHTML 渲染返回的内容
+            document.getElementById('bioDisplay').innerHTML = data.bio;
+
+            // 隐藏编辑区域
+            document.getElementById('bioEditor').style.display = 'none';
+            document.getElementById('btnEditBio').style.display = 'flex';
+
+            // 显示成功提示
+            showToast();
+          }
+        });
+    }
+
+    // 显示保存成功提示
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+  </script>
+
+</body>
+
+</html>

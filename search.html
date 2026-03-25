@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>搜索结果 - ConnectHub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ========== 顶部导航栏（与首页一致） ========== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-left">
+        <a href="index.html" class="logo">
+          <i class="fas fa-globe"></i>
+          <span>ConnectHub</span>
+        </a>
+        <div class="search-box" id="navSearchBox">
+          <i class="fas fa-search"></i>
+          <form id="searchForm" method="GET" action="search.html">
+            <input type="text" id="navSearchInput" name="search" placeholder="搜索用户、话题或内容..." autocomplete="off">
+          </form>
+        </div>
+      </div>
+      <div class="nav-center">
+        <a href="index.html" class="nav-icon" title="首页"><i class="fas fa-house"></i></a>
+        <a href="#" class="nav-icon" title="视频"><i class="fas fa-tv"></i></a>
+        <a href="#" class="nav-icon" title="商城"><i class="fas fa-store"></i></a>
+        <a href="#" class="nav-icon" title="群组"><i class="fas fa-users"></i></a>
+        <a href="#" class="nav-icon" title="游戏"><i class="fas fa-gamepad"></i></a>
+      </div>
+      <div class="nav-right">
+        <button class="icon-btn" title="菜单"><i class="fas fa-grip"></i></button>
+        <button class="icon-btn has-badge" title="消息"><i class="fas fa-comment-dots"></i><span class="badge">5</span></button>
+        <button class="icon-btn has-badge" title="通知"><i class="fas fa-bell"></i><span class="badge">12</span></button>
+        <div class="avatar-btn">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=admin" alt="头像">
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== 搜索结果主体 ========== -->
+  <main class="main-layout">
+
+    <!-- 左侧筛选 -->
+    <aside class="sidebar sidebar-left search-filters">
+      <div class="card">
+        <h4><i class="fas fa-filter"></i> 筛选结果</h4>
+        <nav class="filter-nav">
+          <a href="#" class="active"><i class="fas fa-layer-group"></i> 全部</a>
+          <a href="#"><i class="fas fa-file-lines"></i> 帖子</a>
+          <a href="#"><i class="fas fa-user"></i> 用户</a>
+          <a href="#"><i class="fas fa-image"></i> 照片</a>
+          <a href="#"><i class="fas fa-video"></i> 视频</a>
+          <a href="#"><i class="fas fa-users"></i> 群组</a>
+          <a href="#"><i class="fas fa-calendar"></i> 活动</a>
+          <a href="#"><i class="fas fa-store"></i> 商品</a>
+        </nav>
+        <div class="divider"></div>
+        <h5>发布时间</h5>
+        <nav class="filter-nav sub">
+          <a href="#">今天</a>
+          <a href="#">本周</a>
+          <a href="#">本月</a>
+          <a href="#">今年</a>
+        </nav>
+        <div class="divider"></div>
+        <h5>来源</h5>
+        <nav class="filter-nav sub">
+          <a href="#">我的帖子</a>
+          <a href="#">好友的帖子</a>
+          <a href="#">群组</a>
+          <a href="#">公开帖子</a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- 搜索结果区域 -->
+    <section class="feed search-results-feed">
+
+      <!-- ⚠️ 反射型 XSS 漏洞点：搜索关键词直接用 innerHTML 注入 -->
+      <div class="search-results-header card">
+        <h2><i class="fas fa-search"></i> 搜索结果</h2>
+        <p class="search-query-display">
+          关键词：<span id="searchKeyword" class="keyword-highlight"></span>
+        </p>
+      </div>
+
+      <!-- XSS 教学提示面板（默认隐藏，XSS 触发后可显示） -->
+      <div class="xss-education-panel card" id="xssPanel" style="display:none;">
+        <div class="xss-panel-header">
+          <i class="fas fa-shield-halved"></i>
+          <h3>⚠️ 反射型 XSS 漏洞演示</h3>
+        </div>
+        <div class="xss-panel-body">
+          <p><strong>发生了什么？</strong></p>
+          <p>你刚才在 URL 中注入了 JavaScript 代码，页面未经转义直接将其渲染到 DOM 中，导致恶意脚本执行。</p>
+          <div class="xss-code-example">
+            <code>// 漏洞代码（不安全）
+document.getElementById('searchKeyword').innerHTML = userInput;
+
+// 修复方案（安全）
+document.getElementById('searchKeyword').textContent = userInput;</code>
+          </div>
+          <p><strong>攻击原理：</strong>攻击者构造含恶意脚本的 URL，诱导受害者点击。服务器将用户输入"反射"回页面，浏览器执行注入的脚本。</p>
+          <button class="btn-fix" id="btnFix">🛡️ 点击修复漏洞</button>
+          <button class="btn-exploit" id="btnExploit">💣 再次触发 XSS</button>
+        </div>
+      </div>
+
+      <!-- 模拟搜索结果列表 -->
+      <div class="search-result-item card">
+        <div class="post-header">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=techguru" alt="" class="avatar-sm">
+          <div class="post-meta">
+            <a href="#" class="post-author">科技前沿 <i class="fas fa-circle-check verified"></i></a>
+            <span class="post-time">2 小时前</span>
+          </div>
+        </div>
+        <div class="post-content">
+          <p>🚀 2026年最令人期待的5项技术突破！从量子计算到脑机接口...</p>
+        </div>
+        <div class="post-stats">
+          <div class="reactions"><span class="reaction-icons">👍❤️</span><span>2.4k</span></div>
+          <span>386 条评论</span>
+        </div>
+      </div>
+
+      <div class="search-result-item card">
+        <div class="post-header">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=devops" alt="" class="avatar-sm">
+          <div class="post-meta">
+            <a href="#" class="post-author">DevOps老司机 <i class="fas fa-circle-check verified"></i></a>
+            <span class="post-time">昨天</span>
+          </div>
+        </div>
+        <div class="post-content">
+          <p>🔧 分享一个今天处理线上事故的经验：凌晨3点收到告警，数据库 CPU 飙到 98%...</p>
+        </div>
+        <div class="post-stats">
+          <div class="reactions"><span class="reaction-icons">👍🔥</span><span>956</span></div>
+          <span>142 条评论</span>
+        </div>
+      </div>
+
+      <div class="search-result-item card">
+        <div class="post-header">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=alice" alt="" class="avatar-sm">
+          <div class="post-meta">
+            <a href="#" class="post-author">Alice Zhang</a>
+            <span class="post-time">3 天前</span>
+          </div>
+        </div>
+        <div class="post-content">
+          <p>📝 关于 Web 安全的一些思考：前端永远不要信任用户输入...</p>
+        </div>
+        <div class="post-stats">
+          <div class="reactions"><span class="reaction-icons">💡👍</span><span>423</span></div>
+          <span>67 条评论</span>
+        </div>
+      </div>
+
+      <div class="search-result-item card">
+        <div class="post-header">
+          <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=bob" alt="" class="avatar-sm">
+          <div class="post-meta">
+            <a href="#" class="post-author">Bob Liu</a>
+            <span class="post-time">1 周前</span>
+          </div>
+        </div>
+        <div class="post-content">
+          <p>🎨 用 CSS 实现了一个超酷的 glassmorphism 效果，分享代码给大家！</p>
+        </div>
+        <div class="post-stats">
+          <div class="reactions"><span class="reaction-icons">🔥❤️</span><span>312</span></div>
+          <span>45 条评论</span>
+        </div>
+      </div>
+
+      <!-- 无结果提示 -->
+      <div class="no-results card" id="noResults" style="display:none;">
+        <i class="fas fa-search" style="font-size:48px;color:var(--text-tertiary);"></i>
+        <h3>未找到相关结果</h3>
+        <p>尝试使用其他关键词搜索</p>
+      </div>
+    </section>
+
+    <!-- 右侧边栏 -->
+    <aside class="sidebar sidebar-right">
+      <div class="card trending-card">
+        <h4><i class="fas fa-fire"></i> 热门搜索</h4>
+        <div class="trending-item"><span class="trending-rank">1</span><div><a href="search.html?search=AI绘画">#AI绘画</a><span class="trending-count">12.8k</span></div></div>
+        <div class="trending-item"><span class="trending-rank">2</span><div><a href="search.html?search=春日出游">#春日出游</a><span class="trending-count">9.4k</span></div></div>
+        <div class="trending-item"><span class="trending-rank">3</span><div><a href="search.html?search=开源项目">#开源项目</a><span class="trending-count">7.2k</span></div></div>
+        <div class="trending-item"><span class="trending-rank">4</span><div><a href="search.html?search=远程办公">#远程办公</a><span class="trending-count">5.6k</span></div></div>
+        <div class="trending-item"><span class="trending-rank">5</span><div><a href="search.html?search=Rust">#Rust</a><span class="trending-count">3.1k</span></div></div>
+      </div>
+
+      <!-- XSS 攻击 Payload 示例 -->
+      <div class="card xss-demo-card">
+        <h4><i class="fas fa-bug"></i> XSS 测试用例</h4>
+        <p class="demo-desc">点击下方链接测试反射型 XSS 漏洞：</p>
+        <div class="xss-payloads">
+          <a href="search.html?search=<img src=x onerror=alert('XSS!')>" class="payload-link">
+            <code>&lt;img src=x onerror=alert('XSS!')&gt;</code>
+          </a>
+          <a href="search.html?search=<script>alert(document.cookie)</script>" class="payload-link">
+            <code>&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code>
+          </a>
+          <a href="search.html?search=<svg/onload=alert('XSS')>" class="payload-link">
+            <code>&lt;svg/onload=alert('XSS')&gt;</code>
+          </a>
+          <a href="search.html?search=<marquee onstart=alert('XSS')>HACKED</marquee>" class="payload-link">
+            <code>&lt;marquee onstart=alert('XSS')&gt;</code>
+          </a>
+          <a href="search.html?search=<details open ontoggle=alert('XSS')>" class="payload-link">
+            <code>&lt;details open ontoggle=alert(...)&gt;</code>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>网上银行 - 黑石银行 BlackStone Bank</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #000000;
+      --gray-950: #0d0d0d;
+      --gray-900: #141414;
+      --gray-850: #1a1a1a;
+      --gray-800: #222222;
+      --gray-700: #333333;
+      --gray-600: #4a4a4a;
+      --gray-500: #666666;
+      --gray-400: #888888;
+      --gray-300: #aaaaaa;
+      --gray-200: #cccccc;
+      --gray-100: #e5e5e5;
+      --white: #ffffff;
+      --green: #34d399;
+      --red: #f87171;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--black);
+      color: var(--white);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== 顶栏 ===== */
+    .top-bar {
+      height: 64px;
+      background: var(--black);
+      border-bottom: 1px solid var(--gray-800);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .logo-mark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--white);
+    }
+
+    .logo-mark .mark {
+      width: 32px; height: 32px;
+      border: 2px solid var(--white);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 14px;
+    }
+
+    .logo-mark span { font-weight: 700; font-size: 16px; letter-spacing: 1.5px; }
+
+    .top-nav { display: flex; gap: 4px; }
+
+    .top-nav a {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-400);
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+
+    .top-nav a:hover { background: var(--gray-850); color: var(--white); }
+    .top-nav a.active { background: var(--gray-800); color: var(--white); }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .top-right .icon-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--gray-700);
+      background: transparent;
+      color: var(--gray-400);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .top-right .icon-btn:hover { border-color: var(--gray-500); color: var(--white); }
+
+    .top-right .icon-btn .dot {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 6px; height: 6px;
+      background: var(--white);
+      border-radius: 50%;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 14px 4px 4px;
+      background: var(--gray-900);
+      border: 1px solid var(--gray-700);
+      border-radius: 24px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    .user-pill:hover { border-color: var(--gray-500); }
+
+    .user-pill .avatar {
+      width: 28px; height: 28px;
+      background: var(--gray-700);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .user-pill .uname {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-200);
+    }
+
+    .btn-logout {
+      padding: 6px 14px;
+      background: transparent;
+      border: 1px solid var(--gray-700);
+      border-radius: 6px;
+      color: var(--gray-400);
+      font-size: 12px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+    /* ===== 主容器 ===== */
+    .dashboard {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    /* 欢迎 */
+    .welcome {
+      margin-bottom: 32px;
+      animation: fadeUp 0.5s ease;
+    }
+
+    .welcome h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .welcome h1 span { color: var(--gray-500); font-weight: 400; }
+
+    .welcome .date {
+      font-size: 13px;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 余额卡片 */
+    .balance-cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .b-card {
+      background: var(--gray-900);
+      border: 1px solid var(--gray-800);
+      border-radius: 12px;
+      padding: 24px;
+      transition: all 0.2s;
+      animation: fadeUp 0.5s ease;
+    }
+
+    .b-card:nth-child(2) { animation-delay: 0.05s; }
+    .b-card:nth-child(3) { animation-delay: 0.1s; }
+    .b-card:nth-child(4) { animation-delay: 0.15s; }
+
+    .b-card:hover {
+      border-color: var(--gray-600);
+      transform: translateY(-2px);
+    }
+
+    .b-card .b-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray-500);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .b-card .b-label i { font-size: 14px; }
+
+    .b-card .b-amount {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+
+    .b-card .b-change {
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .b-card .b-change.up { color: var(--green); }
+    .b-card .b-change.down { color: var(--red); }
+
+    .b-card.primary {
+      background: var(--white);
+      border-color: var(--white);
+      color: var(--black);
+    }
+
+    .b-card.primary .b-label { color: var(--gray-500); }
+    .b-card.primary .b-change.up { color: #059669; }
+
+    /* 快捷操作 */
+    .quick-actions {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .q-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--gray-900);
+      border: 1px solid var(--gray-700);
+      border-radius: 8px;
+      color: var(--gray-200);
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .q-btn:hover {
+      border-color: var(--white);
+      color: var(--white);
+      transform: translateY(-1px);
+    }
+
+    .q-btn i { font-size: 14px; color: var(--gray-400); }
+    .q-btn:hover i { color: var(--white); }
+
+    /* 两栏 */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+    }
+
+    /* 交易记录 */
+    .panel {
+      background: var(--gray-900);
+      border: 1px solid var(--gray-800);
+      border-radius: 12px;
+      overflow: hidden;
+      animation: fadeUp 0.5s ease;
+      animation-delay: 0.1s;
+      animation-fill-mode: both;
+    }
+
+    .panel-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--gray-800);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-header h3 {
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-header h3 i { color: var(--gray-400); font-size: 14px; }
+
+    .panel-header .view-all {
+      font-size: 12px;
+      color: var(--gray-500);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.15s;
+    }
+
+    .panel-header .view-all:hover { color: var(--white); }
+
+    .tx-list { padding: 0; }
+
+    .tx-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--gray-800);
+      transition: background 0.1s;
+    }
+
+    .tx-item:last-child { border-bottom: none; }
+    .tx-item:hover { background: var(--gray-850); }
+
+    .tx-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: var(--gray-800);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: var(--gray-300);
+      flex-shrink: 0;
+    }
+
+    .tx-info { flex: 1; }
+
+    .tx-info .tx-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .tx-info .tx-desc {
+      font-size: 12px;
+      color: var(--gray-500);
+    }
+
+    .tx-amount {
+      text-align: right;
+    }
+
+    .tx-amount .amount {
+      font-size: 14px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tx-amount .amount.income { color: var(--green); }
+    .tx-amount .amount.expense { color: var(--white); }
+
+    .tx-amount .tx-time {
+      font-size: 11px;
+      color: var(--gray-600);
+      margin-top: 2px;
+    }
+
+    /* 右栏：卡片 & 安全 */
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* 银行卡 */
+    .bank-card-widget {
+      background: var(--gray-900);
+      border: 1px solid var(--gray-800);
+      border-radius: 12px;
+      padding: 24px;
+      animation: fadeUp 0.5s ease;
+      animation-delay: 0.15s;
+      animation-fill-mode: both;
+    }
+
+    .bank-card-widget h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-400);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-visual {
+      background: linear-gradient(135deg, var(--gray-800), var(--gray-700));
+      border-radius: 12px;
+      padding: 24px;
+      aspect-ratio: 1.6;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--gray-600);
+    }
+
+    .card-visual::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -20%;
+      width: 200px;
+      height: 200px;
+      border: 1px solid var(--gray-600);
+      border-radius: 50%;
+      opacity: 0.3;
+    }
+
+    .card-visual::after {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 160px;
+      height: 160px;
+      border: 1px solid var(--gray-600);
+      border-radius: 50%;
+      opacity: 0.2;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .card-top .chip {
+      width: 36px; height: 28px;
+      background: linear-gradient(135deg, #d4d4d4, #a0a0a0);
+      border-radius: 4px;
+    }
+
+    .card-top .bank-name {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--gray-300);
+    }
+
+    .card-number {
+      font-size: 17px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      font-variant-numeric: tabular-nums;
+      color: var(--gray-200);
+    }
+
+    .card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .card-holder-label {
+      font-size: 9px;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card-holder-name {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--gray-200);
+    }
+
+    .card-expire {
+      text-align: right;
+    }
+
+    .card-expire .card-holder-label { display: block; }
+    .card-expire .card-holder-name { font-size: 13px; }
+
+    /* 安全信息 */
+    .security-panel {
+      background: var(--gray-900);
+      border: 1px solid var(--gray-800);
+      border-radius: 12px;
+      padding: 24px;
+      animation: fadeUp 0.5s ease;
+      animation-delay: 0.2s;
+      animation-fill-mode: both;
+    }
+
+    .security-panel h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-400);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sec-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--gray-800);
+      font-size: 13px;
+    }
+
+    .sec-row:last-child { border-bottom: none; }
+    .sec-row .sec-label { color: var(--gray-400); }
+    .sec-row .sec-value { color: var(--gray-200); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+    /* Cookie 展示面板 */
+    .cookie-panel {
+      background: var(--gray-900);
+      border: 1px solid var(--gray-800);
+      border-radius: 12px;
+      padding: 24px;
+      animation: fadeUp 0.5s ease;
+      animation-delay: 0.25s;
+      animation-fill-mode: both;
+    }
+
+    .cookie-panel h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gray-400);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cookie-panel h4 i { color: var(--red); }
+
+    .cookie-display {
+      background: var(--black);
+      border: 1px solid var(--gray-800);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      color: var(--gray-300);
+      word-break: break-all;
+      line-height: 1.8;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+
+    .cookie-display .ck-key { color: var(--red); font-weight: 700; }
+    .cookie-display .ck-val { color: var(--gray-400); }
+
+    .cookie-hint {
+      font-size: 11px;
+      color: var(--gray-600);
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+
+    /* 未登录提示 */
+    .not-logged-in {
+      display: none;
+      text-align: center;
+      padding: 80px 32px;
+    }
+
+    .not-logged-in i { font-size: 48px; color: var(--gray-700); margin-bottom: 16px; }
+    .not-logged-in h2 { font-size: 22px; color: var(--gray-300); margin-bottom: 8px; }
+    .not-logged-in p { color: var(--gray-500); font-size: 14px; margin-bottom: 24px; }
+
+    .not-logged-in .btn-go-login {
+      display: inline-block;
+      padding: 12px 32px;
+      background: var(--white);
+      color: var(--black);
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .not-logged-in .btn-go-login:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,255,255,0.08); }
+
+    /* 响应式 */
+    @media (max-width: 1024px) {
+      .balance-cards { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .balance-cards { grid-template-columns: 1fr; }
+      .quick-actions { flex-wrap: wrap; }
+      .dashboard { padding: 20px 16px; }
+      .top-bar { padding: 0 16px; }
+      .top-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 顶栏 -->
+  <header class="top-bar">
+    <div class="top-left">
+      <a href="bank-dashboard.html" class="logo-mark">
+        <div class="mark">BS</div>
+        <span>BLACKSTONE</span>
+      </a>
+      <nav class="top-nav">
+        <a href="#" class="active">总览</a>
+        <a href="#">账户</a>
+        <a href="#">转账</a>
+        <a href="#">理财</a>
+        <a href="#">贷款</a>
+        <a href="#">设置</a>
+      </nav>
+    </div>
+    <div class="top-right">
+      <button class="icon-btn" title="通知"><i class="fas fa-bell"></i><span class="dot"></span></button>
+      <button class="icon-btn" title="消息"><i class="fas fa-envelope"></i></button>
+      <div class="user-pill" id="userPill">
+        <div class="avatar" id="userAvatar">A</div>
+        <span class="uname" id="userName">Admin</span>
+      </div>
+      <button class="btn-logout" id="btnLogout">登出</button>
+    </div>
+  </header>
+
+  <!-- 已登录内容 -->
+  <div class="dashboard" id="dashboardContent">
+    <!-- 欢迎 -->
+    <div class="welcome">
+      <h1>欢迎回来，<span id="welcomeName">Admin</span></h1>
+      <div class="date" id="todayDate"></div>
+    </div>
+
+    <!-- 余额卡片 -->
+    <div class="balance-cards">
+      <div class="b-card primary">
+        <div class="b-label"><i class="fas fa-wallet"></i> 总资产</div>
+        <div class="b-amount">¥ 1,286,453.00</div>
+        <div class="b-change up"><i class="fas fa-arrow-up"></i> +2.4% 本月</div>
+      </div>
+      <div class="b-card">
+        <div class="b-label"><i class="fas fa-building-columns"></i> 活期储蓄</div>
+        <div class="b-amount">¥ 358,120.50</div>
+        <div class="b-change up"><i class="fas fa-arrow-up"></i> +¥12,300</div>
+      </div>
+      <div class="b-card">
+        <div class="b-label"><i class="fas fa-chart-line"></i> 理财产品</div>
+        <div class="b-amount">¥ 800,000.00</div>
+        <div class="b-change up"><i class="fas fa-arrow-up"></i> +3.8% 年化</div>
+      </div>
+      <div class="b-card">
+        <div class="b-label"><i class="fas fa-credit-card"></i> 信用卡待还</div>
+        <div class="b-amount">¥ 12,680.00</div>
+        <div class="b-change down"><i class="fas fa-calendar"></i> 4月15日到期</div>
+      </div>
+    </div>
+
+    <!-- 快捷操作 -->
+    <div class="quick-actions">
+      <button class="q-btn"><i class="fas fa-arrow-right-arrow-left"></i> 转账汇款</button>
+      <button class="q-btn"><i class="fas fa-qrcode"></i> 扫码支付</button>
+      <a href="/bank/search" class="q-btn" style="text-decoration:none;"><i class="fas fa-file-invoice-dollar"></i> 账单查询</a>
+      <button class="q-btn"><i class="fas fa-money-bill-trend-up"></i> 购买理财</button>
+      <button class="q-btn"><i class="fas fa-shield-halved"></i> 安全中心</button>
+    </div>
+
+    <!-- 两栏 -->
+    <div class="two-col">
+      <!-- 交易记录 -->
+      <div class="panel">
+        <div class="panel-header">
+          <h3><i class="fas fa-clock-rotate-left"></i> 最近交易</h3>
+          <a href="/bank/search" class="view-all">查看全部 →</a>
+        </div>
+        <div class="tx-list">
+          <div class="tx-item">
+            <div class="tx-icon"><i class="fas fa-cart-shopping"></i></div>
+            <div class="tx-info">
+              <div class="tx-name">京东商城</div>
+              <div class="tx-desc">在线购物 · 储蓄卡</div>
+            </div>
+            <div class="tx-amount">
+              <div class="amount expense">- ¥2,399.00</div>
+              <div class="tx-time">今天 14:23</div>
+            </div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon"><i class="fas fa-building"></i></div>
+            <div class="tx-info">
+              <div class="tx-name">工资收入</div>
+              <div class="tx-desc">杭州科技有限公司</div>
+            </div>
+            <div class="tx-amount">
+              <div class="amount income">+ ¥28,500.00</div>
+              <div class="tx-time">03-20 09:00</div>
+            </div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon"><i class="fas fa-bolt"></i></div>
+            <div class="tx-info">
+              <div class="tx-name">电费缴纳</div>
+              <div class="tx-desc">国家电网 · 自动扣款</div>
+            </div>
+            <div class="tx-amount">
+              <div class="amount expense">- ¥186.50</div>
+              <div class="tx-time">03-19 08:00</div>
+            </div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon"><i class="fas fa-utensils"></i></div>
+            <div class="tx-info">
+              <div class="tx-name">美团外卖</div>
+              <div class="tx-desc">在线支付 · 信用卡</div>
+            </div>
+            <div class="tx-amount">
+              <div class="amount expense">- ¥58.00</div>
+              <div class="tx-time">03-18 12:35</div>
+            </div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon"><i class="fas fa-arrow-right-arrow-left"></i></div>
+            <div class="tx-info">
+              <div class="tx-name">转账 - Lily Chen</div>
+              <div class="tx-desc">个人转账 · 储蓄卡</div>
+            </div>
+            <div class="tx-amount">
+              <div class="amount expense">- ¥5,000.00</div>
+              <div class="tx-time">03-17 16:20</div>
+            </div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="tx-info">
+              <div class="tx-name">理财收益到账</div>
+              <div class="tx-desc">稳健型90天 · 自动到账</div>
+            </div>
+            <div class="tx-amount">
+              <div class="amount income">+ ¥1,230.00</div>
+              <div class="tx-time">03-15 00:00</div>
+            </div>
+          </div>
+          <div class="tx-item">
+            <div class="tx-icon"><i class="fas fa-gas-pump"></i></div>
+            <div class="tx-info">
+              <div class="tx-name">中石化加油</div>
+              <div class="tx-desc">POS消费 · 储蓄卡</div>
+            </div>
+            <div class="tx-amount">
+              <div class="amount expense">- ¥420.00</div>
+              <div class="tx-time">03-14 18:42</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右栏 -->
+      <div class="right-col">
+        <!-- 银行卡 -->
+        <div class="bank-card-widget">
+          <h4><i class="fas fa-credit-card"></i> 我的银行卡</h4>
+          <div class="card-visual">
+            <div class="card-top">
+              <div class="chip"></div>
+              <div class="bank-name">BLACKSTONE BANK</div>
+            </div>
+            <div class="card-number">6222 •••• •••• 8888</div>
+            <div class="card-bottom">
+              <div>
+                <div class="card-holder-label">Card Holder</div>
+                <div class="card-holder-name" id="cardHolder">ADMIN</div>
+              </div>
+              <div class="card-expire">
+                <div class="card-holder-label">Expires</div>
+                <div class="card-holder-name">12/28</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 安全信息 -->
+        <div class="security-panel">
+          <h4><i class="fas fa-shield-halved"></i> 安全信息</h4>
+          <div class="sec-row">
+            <span class="sec-label">登录 IP</span>
+            <span class="sec-value" id="loginIp">192.168.1.105</span>
+          </div>
+          <div class="sec-row">
+            <span class="sec-label">登录时间</span>
+            <span class="sec-value" id="loginTime">--</span>
+          </div>
+          <div class="sec-row">
+            <span class="sec-label">上次登录</span>
+            <span class="sec-value">2026-03-22 09:15</span>
+          </div>
+          <div class="sec-row">
+            <span class="sec-label">安全等级</span>
+            <span class="sec-value" style="color:var(--green);">高</span>
+          </div>
+        </div>
+
+        <!-- Cookie 展示 -->
+        <div class="cookie-panel">
+          <h4><i class="fas fa-cookie-bite"></i> 当前 Cookie（XSS 可窃取）</h4>
+          <div class="cookie-display" id="cookieDisplay">读取中...</div>
+          <div class="cookie-hint">
+            ⚠️ 这些 Cookie 未设置 HttpOnly，可被 JavaScript (document.cookie) 读取。
+            在 XSS 攻击中，攻击者可通过注入脚本窃取这些 Cookie。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 未登录提示 -->
+  <div class="not-logged-in" id="notLoggedIn">
+    <i class="fas fa-lock"></i>
+    <h2>请先登录</h2>
+    <p>您尚未登录网上银行，请先完成身份验证。</p>
+    <a href="bank-login.html" class="btn-go-login">前往登录</a>
+  </div>
+
+  <script>
+    (function () {
+      const cookies = parseCookies(document.cookie);
+
+      // 判断是否已登录
+      if (!cookies.bank_session_id) {
+        document.getElementById('dashboardContent').style.display = 'none';
+        document.getElementById('notLoggedIn').style.display = 'block';
+        return;
+      }
+
+      // 填充用户信息
+      const name = decodeURIComponent(cookies.bank_user_name || 'Admin');
+      document.getElementById('welcomeName').textContent = name;
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+      document.getElementById('cardHolder').textContent = name.toUpperCase();
+
+      // 日期
+      const now = new Date();
+      document.getElementById('todayDate').textContent =
+        now.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+
+      document.getElementById('loginTime').textContent =
+        now.toLocaleString('zh-CN', { hour12: false });
+
+      // 展示 Cookie
+      displayCookies();
+
+      // 登出
+      document.getElementById('btnLogout').addEventListener('click', async function () {
+        try {
+          await fetch('/api/bank/logout', { method: 'POST', credentials: 'same-origin' });
+        } catch (e) {}
+        // 前端清除 cookie
+        document.cookie.split(';').forEach(c => {
+          const name = c.split('=')[0].trim();
+          document.cookie = `${name}=; Max-Age=0; Path=/`;
+        });
+        window.location.href = 'bank-login.html';
+      });
+
+      function displayCookies() {
+        const el = document.getElementById('cookieDisplay');
+        const raw = document.cookie;
+        if (!raw) {
+          el.textContent = '(无 Cookie)';
+          return;
+        }
+        const pairs = raw.split(';').map(s => s.trim());
+        el.innerHTML = pairs.map(p => {
+          const [k, ...v] = p.split('=');
+          return `<span class="ck-key">${escapeHTML(k)}</span>=<span class="ck-val">${escapeHTML(v.join('='))}</span>`;
+        }).join('<br>');
+      }
+
+      function escapeHTML(s) {
+        const d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+      }
+    })();
+
+    function parseCookies(str) {
+      const c = {};
+      str.split(';').forEach(p => {
+        const [k, ...v] = p.trim().split('=');
+        if (k) c[k] = v.join('=');
+      });
+      return c;
+    }
+  </script>
+</body>
+</html>
